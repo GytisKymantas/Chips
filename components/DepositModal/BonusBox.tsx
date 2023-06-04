@@ -1,6 +1,8 @@
 import { Box } from '@mui/system';
 import React from 'react';
 import CrossedIcon from '../../public/crossedIcon';
+import GiftBox from '../../public/giftBox';
+import GiftBoxGray from '../../public/giftBoxGray';
 
 interface BonusBoxProps {
   fromNumber: number;
@@ -19,13 +21,13 @@ const BonusBox: React.FC<BonusBoxProps> = ({
   return (
     <Box
       sx={{
-        background: !disabled ? 'rgba(128, 128, 128, 0.5)' : '#2E2E2E',
+        background: '#2E2E2E',
         padding: '12px 14px',
-        // width: '65.7px',
+        opacity: disabled ? '1' : '0.5',
         border:
           valueIndex === index && disabled
             ? '2px solid #F3BA2F'
-            : '1px solid transparent',
+            : '2px solid transparent',
         boxShadow:
           valueIndex === index && disabled
             ? '0px 0px 5px -1px #F3BA2F'
@@ -36,8 +38,8 @@ const BonusBox: React.FC<BonusBoxProps> = ({
         cursor: !disabled ? 'arrow' : 'pointer',
       }}
     >
-      <Box>
-        <CrossedIcon style={{ cursor: 'pointer' }} />
+      <Box sx={{ opacity: disabled ? '1' : '0.7' }}>
+        <GiftBox />{' '}
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', width: '50px' }}>
         <span

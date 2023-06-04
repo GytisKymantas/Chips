@@ -1,8 +1,9 @@
 import { Box, Button, Typography } from '@mui/material';
 import Image from 'next/image';
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Confetti from '../../../public/confetti';
+import { addDepositModal } from '../../../store/reducers/counter';
 
 interface CardProps {
   index: number;
@@ -19,12 +20,36 @@ const Card: React.FC<CardProps> = ({
 }) => {
   const counter = useSelector((state) => state);
   const [claimed, setClaimed] = useState(false);
+  const dispatch = useDispatch();
+
+  const handleModalSelection = (value: string, index: number) => {
+    console.log(index, 'index');
+    dispatch(addDepositModal(index));
+    setModal(value);
+  };
+  console.log(counter, 'counter state');
 
   const bonusAmount = counter.counter[`deposit_${index}`];
 
   const maximumValue = limitAmount;
   const value = (bonusAmount / maximumValue) * 100;
   const bonusPercentage = value.toFixed(2);
+  console.log(index, 'index');
+
+  const handleDisableButton = () => {
+    if (bonusAmount > 0) {
+      return false;
+    }
+
+    if (counter.counter.active_modal !== 2 && index === 3) {
+      return true;
+    }
+
+    if (counter.counter.active_modal !== 3 && index === 4) {
+      return true;
+    }
+    return false;
+  };
 
   if (claimed) {
     return (
@@ -32,10 +57,10 @@ const Card: React.FC<CardProps> = ({
         sx={{
           background:
             'linear-gradient(171.43deg, #924FE7 6.25%, #6725BB 95.35%)',
-          width: '503px',
+          width: '553px',
           color: '#FFFFFF',
           borderRadius: '20px',
-          opacity: index === 3 || index === 4 ? '0.4' : '1',
+          opacity: handleDisableButton() ? '0.4' : '1',
           position: 'relative',
         }}
       >
@@ -60,7 +85,7 @@ const Card: React.FC<CardProps> = ({
               textAlign: 'center',
             }}
           >
-            $1800.00
+            ${limitAmount}.00
           </Typography>
         </Box>
 
@@ -72,7 +97,7 @@ const Card: React.FC<CardProps> = ({
             transform: 'rotate(-15deg)',
             borderRadius: '10px',
             position: 'absolute',
-            top: '39px',
+            top: '28px',
             left: '254px',
           }}
         >
@@ -91,14 +116,15 @@ const Card: React.FC<CardProps> = ({
         <Box>
           <Confetti />
         </Box>
-        {/* <Box>
+        <Box>
           <Image
             src='/public/red-box.png'
             alt='red box'
             width={153}
             height={139}
           />
-        </Box> */}
+        </Box>
+        <img src='/public/red-box/png' alt='3' />
       </Box>
     );
   }
@@ -111,7 +137,7 @@ const Card: React.FC<CardProps> = ({
         padding: '18px 25px',
         color: '#FFFFFF',
         borderRadius: '20px',
-        opacity: index === 3 || index === 4 ? '0.4' : '1',
+        opacity: handleDisableButton() ? '0.4' : '1',
       }}
     >
       <Typography
@@ -180,12 +206,14 @@ const Card: React.FC<CardProps> = ({
             width: '127px',
             marginLeft: '25px',
           }}
-          disabled={
-            bonusAmount === 0 || bonusAmount === limitAmount ? false : true
+          disabled={handleDisableButton()}
+          onClick={() =>
+            bonusAmount > 0
+              ? setClaimed(true)
+              : handleModalSelection('Deposit Modal', index)
           }
-          onClick={() => setModal('Deposit Modal')}
         >
-          {bonusAmount === limitAmount ? 'Claim' : 'Deposit'}
+          {bonusAmount > 0 ? 'Claim' : 'Deposit'}
         </Button>{' '}
       </Box>
     </Box>
@@ -193,3 +221,6 @@ const Card: React.FC<CardProps> = ({
 };
 
 export default Card;
+
+// if bonusAmount > 0 return false
+// if counter.counter[`deposit_${index}`] !== 2 || counter.counter[`deposit_${index}`] !== 3 return true

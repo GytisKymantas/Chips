@@ -4,20 +4,13 @@ import Card from './Card';
 import ArrowLeft from '../../public/arrowLeft';
 import ArrowRight from '../../public/arrowRight';
 import CrossedIcon from '../../public/crossedIcon';
-
-const backgrounds = [
-  'linear-gradient(171.43deg, #924FE7 6.25%, #6725BB 95.35%)',
-  'linear-gradient(171.43deg, #5681EE 6.25%, #163993 95.35%)',
-  'linear-gradient(169.49deg, #1DC57C -3.51%, #145934 94.56%)',
-  'linear-gradient(351.88deg, #AA0508 3.93%, #F33A3D 92.07%)',
-];
+import { backgrounds, limitAmount } from '../../utils/ModalData';
 
 interface ClaimModal {
   setModal: any;
 }
 const ClaimModal: React.FC<ClaimModal> = ({ setModal }) => {
   const [detailsModal, setDetailsModal] = useState(false);
-  const limitAmount = [1800, 4100, 5000, 6000];
 
   if (detailsModal) {
     return (
@@ -39,7 +32,7 @@ const ClaimModal: React.FC<ClaimModal> = ({ setModal }) => {
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '13px' }}>
             <Box
-              onClick={() => setModal('Claim Modal')}
+              onClick={() => setDetailsModal(false)}
               sx={{ cursor: 'pointer' }}
             >
               <ArrowLeft />
@@ -123,53 +116,51 @@ const ClaimModal: React.FC<ClaimModal> = ({ setModal }) => {
         padding: '45px 39px',
       }}
     >
-      <div>
-        <Box
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <Typography
+          variant='h2'
           sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
+            fontWeight: 700,
+            fontSize: '32px',
+            lineHeight: '40px',
+            color: '#FFFFFF',
           }}
         >
-          <Typography
-            variant='h2'
-            sx={{
-              fontWeight: 700,
-              fontSize: '32px',
-              lineHeight: '40px',
-              color: '#FFFFFF',
-            }}
-          >
-            Deposit Bonus
-          </Typography>
-          <Box sx={{ cursor: 'pointer' }} onClick={() => setModal('Initial')}>
-            <CrossedIcon />
-          </Box>
+          Deposit Bonus
+        </Typography>
+        <Box sx={{ cursor: 'pointer' }} onClick={() => setModal('Initial')}>
+          <CrossedIcon />
         </Box>
-        <Box
+      </Box>
+      <Box
+        sx={{
+          marginBottom: '47px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+          cursor: 'pointer',
+        }}
+        onClick={() => setDetailsModal(!detailsModal)}
+      >
+        <Typography
+          variant='body1'
           sx={{
-            marginBottom: '47px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            cursor: 'pointer',
+            fontWeight: 700,
+            fontSize: '16px',
+            lineHeight: '24px',
+            color: '#41E8C2',
           }}
-          onClick={() => setDetailsModal(!detailsModal)}
         >
-          <Typography
-            variant='body1'
-            sx={{
-              fontWeight: 700,
-              fontSize: '16px',
-              lineHeight: '24px',
-              color: '#41E8C2',
-            }}
-          >
-            Details
-          </Typography>
-          <ArrowRight />
-        </Box>
-      </div>
+          Details
+        </Typography>
+        <ArrowRight />
+      </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         {backgrounds.map((background, index) => (
           <Card

@@ -1,12 +1,11 @@
-import { Box } from '@mui/material';
+import { Box, Card, CardMedia } from '@mui/material';
 import React, { useState } from 'react';
 import ClaimModal from '../ClaimModal';
 import DepositModal from '../DepositModal';
+import Image from 'next/image';
 
 const ModalContainer = () => {
   const [modal, setModal] = useState('');
-
-  console.log(modal, 'which modal');
 
   const renderModal = () => {
     if (modal === 'Deposit Modal') {
@@ -24,15 +23,32 @@ const ModalContainer = () => {
           width: '200px',
           height: '100px',
           cursor: 'pointer',
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
         }}
         onClick={() => setModal('Claim Modal')}
       >
-        initial modal
+        {/* <Image
+          src='/public/initial.png'
+          alt='click me'
+          width={200}
+          height={100}
+        />{' '}
+        <img src='/public/bam.jpg' alt='img' />{' '} */}
+        <Card>
+          <CardMedia
+            component='img'
+            alt='Example Image'
+            image='/public/initial.png' // Replace with the actual path to your image
+            title='Example Image'
+          />
+        </Card>
       </Box>
     );
   };
 
-  return <div>{renderModal()}</div>;
+  return <Box>{renderModal()}</Box>;
 };
 
 export default ModalContainer;
