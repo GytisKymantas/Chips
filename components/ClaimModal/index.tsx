@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { Box, List, Typography, ListItem } from '@mui/material';
 import Card from './Card';
 import ArrowLeft from '../../public/arrowLeft';
 import ArrowRight from '../../public/arrowRight';
 import CrossedIcon from '../../public/crossedIcon';
-import { backgrounds, limitAmount } from '../../utils/ModalData';
+import { backgrounds, limitAmount, ModalTypes } from '../../utils/ModalData';
 
 interface ClaimModal {
-  setModal: any;
+  setModal: Dispatch<SetStateAction<string>>;
 }
+
 const ClaimModal: React.FC<ClaimModal> = ({ setModal }) => {
   const [detailsModal, setDetailsModal] = useState(false);
 
@@ -49,7 +50,10 @@ const ClaimModal: React.FC<ClaimModal> = ({ setModal }) => {
               Deposit Bonus
             </Typography>
           </Box>
-          <Box sx={{ cursor: 'pointer' }} onClick={() => setModal('Initial')}>
+          <Box
+            sx={{ cursor: 'pointer' }}
+            onClick={() => setModal(ModalTypes.Initial)}
+          >
             <CrossedIcon />
           </Box>
         </Box>
@@ -134,7 +138,10 @@ const ClaimModal: React.FC<ClaimModal> = ({ setModal }) => {
         >
           Deposit Bonus
         </Typography>
-        <Box sx={{ cursor: 'pointer' }} onClick={() => setModal('Initial')}>
+        <Box
+          sx={{ cursor: 'pointer' }}
+          onClick={() => setModal(ModalTypes.Initial)}
+        >
           <CrossedIcon />
         </Box>
       </Box>

@@ -1,15 +1,20 @@
 import { Box, Button, Typography } from '@mui/material';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import BlueBox from '../../../public/blueBox';
 import Confetti from '../../../public/confetti';
+import GreenBox from '../../../public/greenBox';
+import PurpleBox from '../../../public/purpleBox';
 import { addDepositModal } from '../../../store/reducers/counter';
+import { CounterType } from '../../../types/types';
+import { handleDepositNumber } from '../../../utils/functions';
 
 interface CardProps {
   index: number;
   background: string;
-  setModal: any;
-  limitAmount: any;
+  setModal: Dispatch<SetStateAction<string>>;
+  limitAmount: number;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -18,23 +23,18 @@ const Card: React.FC<CardProps> = ({
   setModal,
   limitAmount,
 }) => {
-  const counter = useSelector((state) => state);
+  const counter = useSelector((state) => state) as CounterType;
   const [claimed, setClaimed] = useState(false);
   const dispatch = useDispatch();
-
-  const handleModalSelection = (value: string, index: number) => {
-    console.log(index, 'index');
-    dispatch(addDepositModal(index));
-    setModal(value);
-  };
-  console.log(counter, 'counter state');
-
   const bonusAmount = counter.counter[`deposit_${index}`];
-
   const maximumValue = limitAmount;
   const value = (bonusAmount / maximumValue) * 100;
   const bonusPercentage = value.toFixed(2);
-  console.log(index, 'index');
+
+  const handleModalSelection = (value: string, index: number) => {
+    dispatch(addDepositModal(index));
+    setModal(value);
+  };
 
   const handleDisableButton = () => {
     if (bonusAmount > 0) {
@@ -64,7 +64,7 @@ const Card: React.FC<CardProps> = ({
           position: 'relative',
         }}
       >
-        <Box sx={{ position: 'absolute', top: '26%', left: '8%' }}>
+        <Box sx={{ position: 'absolute', top: '26%', left: '8%', zIndex: '2' }}>
           <Typography
             variant='h2'
             sx={{
@@ -116,15 +116,46 @@ const Card: React.FC<CardProps> = ({
         <Box>
           <Confetti />
         </Box>
-        <Box>
-          <Image
-            src='/public/red-box.png'
-            alt='red box'
-            width={153}
-            height={139}
-          />
-        </Box>
-        <img src='/public/red-box/png' alt='3' />
+
+        {index === 1 && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '-5%',
+              left: '7%',
+              width: '150px',
+              height: '130px',
+            }}
+          >
+            <PurpleBox />
+          </Box>
+        )}
+        {index === 2 && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '-5%',
+              left: '7%',
+              width: '150px',
+              height: '130px',
+            }}
+          >
+            <BlueBox />
+          </Box>
+        )}
+        {index === 3 && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '-5%',
+              left: '7%',
+              width: '150px',
+              height: '130px',
+            }}
+          >
+            <GreenBox />
+          </Box>
+        )}
       </Box>
     );
   }
@@ -148,12 +179,14 @@ const Card: React.FC<CardProps> = ({
           lineHeight: '40px',
         }}
       >
-        {index}st deposit
+        {handleDepositNumber(index)}
       </Typography>
 
       <Box
         sx={{
           display: 'flex',
+          marginTop: '28px',
+          justifyContent: 'space-between',
         }}
       >
         <Box sx={{ width: '238px' }}>
@@ -167,9 +200,9 @@ const Card: React.FC<CardProps> = ({
             }}
           >
             Bonus amount:
-            <span style={{ color: '#F3BA2F' }}>
+            <Typography component='span' style={{ color: '#F3BA2F' }}>
               ${bonusAmount}/ ${limitAmount}.00
-            </span>
+            </Typography>
           </Typography>
           <Box sx={{ position: 'relative' }}>
             <Box
@@ -182,7 +215,8 @@ const Card: React.FC<CardProps> = ({
                 background: `linear-gradient(to right, #F3BA2F ${bonusPercentage}%, rgba(0, 0, 0, 0.2) ${bonusPercentage}%)`,
               }}
             />
-            <span
+            <Typography
+              component='span'
               style={{
                 position: 'absolute',
                 top: '0',
@@ -192,7 +226,7 @@ const Card: React.FC<CardProps> = ({
               }}
             >
               {bonusPercentage}%
-            </span>
+            </Typography>
           </Box>
         </Box>
         <Button
@@ -221,6 +255,3 @@ const Card: React.FC<CardProps> = ({
 };
 
 export default Card;
-
-// if bonusAmount > 0 return false
-// if counter.counter[`deposit_${index}`] !== 2 || counter.counter[`deposit_${index}`] !== 3 return true

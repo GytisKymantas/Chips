@@ -1,8 +1,7 @@
+import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React from 'react';
-import CrossedIcon from '../../public/crossedIcon';
 import GiftBox from '../../public/giftBox';
-import GiftBoxGray from '../../public/giftBoxGray';
 
 interface BonusBoxProps {
   fromNumber: number;
@@ -42,7 +41,8 @@ const BonusBox: React.FC<BonusBoxProps> = ({
         <GiftBox />{' '}
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', width: '50px' }}>
-        <span
+        <Typography
+          component='span'
           style={{
             color: '#8E8E8E',
             fontWeight: '400',
@@ -51,8 +51,9 @@ const BonusBox: React.FC<BonusBoxProps> = ({
           }}
         >
           from ${fromNumber}
-        </span>
-        <span
+        </Typography>
+        <Typography
+          component='span'
           style={{
             color: '#F3BA2F',
             fontSize: '18px',
@@ -61,7 +62,8 @@ const BonusBox: React.FC<BonusBoxProps> = ({
           }}
         >
           {percentage}%{' '}
-          <span
+          <Typography
+            component='span'
             style={{
               color: '#F3BA2F',
               fontSize: '12px',
@@ -70,8 +72,8 @@ const BonusBox: React.FC<BonusBoxProps> = ({
             }}
           >
             BONUS
-          </span>
-        </span>
+          </Typography>
+        </Typography>
       </Box>
     </Box>
   );

@@ -7,7 +7,7 @@ import {
   Select,
   Switch,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CrossedIcon from '../../public/crossedIcon';
 import InformationIcon from '../../public/informationIcon';
@@ -17,13 +17,14 @@ import {
   EUROfloat,
   values,
   fromNumbers,
+  backgrounds,
+  ModalTypes,
 } from '../../utils/ModalData';
 import BonusBox from './BonusBox';
-
-// Dispatch<SetStateAction<boolean>>;?
+import CounterType from '../../types';
 
 interface DepositModal {
-  setModal: any;
+  setModal: Dispatch<SetStateAction<string>>;
 }
 
 const DepositModal: React.FC<DepositModal> = ({ setModal }) => {
@@ -32,9 +33,8 @@ const DepositModal: React.FC<DepositModal> = ({ setModal }) => {
   const [currency, setCurrency] = useState('EUR');
   const [checked, setChecked] = useState(false);
   const [selectedBox, setSelectedBox] = useState(0);
-  const [value, setValue] = useState<number>();
-  const counter = useSelector((state) => state);
-  console.log(counter.counter.active_modal, 'ayoo bch');
+  const [value, setValue] = useState<string>('');
+  const counter = useSelector((state) => state) as CounterType;
   const handleToggle = () => {
     setChecked(!checked);
   };
@@ -44,7 +44,6 @@ const DepositModal: React.FC<DepositModal> = ({ setModal }) => {
 
     const depositNumber = counter.counter.active_modal;
     const amount = parseFloat(value);
-    // const currentAmount = counter.counter.deposit_1
 
     let multipliedAmount = 0;
 
@@ -58,10 +57,8 @@ const DepositModal: React.FC<DepositModal> = ({ setModal }) => {
       multipliedAmount = amount;
     }
 
-    // console.log(multipliedAmount, 'multiplied'); // Check the final value of multipliedAmount
-
     dispatch(addDeposit({ depositNumber, amount: multipliedAmount }));
-    setModal('Claim Modal');
+    setModal(ModalTypes.ClaimModal);
   };
 
   const handleCurrencyChange = (event) => {
@@ -69,10 +66,12 @@ const DepositModal: React.FC<DepositModal> = ({ setModal }) => {
 
     if (currency === 'EUR' && selectedCurrency === 'USD') {
       setCurrency(selectedCurrency);
-      setValue(Number((value * USDfloat).toFixed(2)));
+      const convertedValue = (Number(value) * USDfloat).toFixed(2);
+      setValue(String(convertedValue));
     } else if (currency === 'USD' && selectedCurrency === 'EUR') {
       setCurrency(selectedCurrency);
-      setValue(Number((value * EUROfloat).toFixed(2)));
+      const convertedValue = (Number(value) * EUROfloat).toFixed(2);
+      setValue(String(convertedValue));
     } else {
       setCurrency(selectedCurrency);
     }
@@ -114,7 +113,10 @@ const DepositModal: React.FC<DepositModal> = ({ setModal }) => {
           >
             Select amount
           </Typography>
-          <Box sx={{ cursor: 'pointer' }} onClick={() => setModal('Initial')}>
+          <Box
+            sx={{ cursor: 'pointer' }}
+            onClick={() => setModal(ModalTypes.Initial)}
+          >
             <CrossedIcon />
           </Box>
         </Box>
@@ -156,10 +158,17 @@ const DepositModal: React.FC<DepositModal> = ({ setModal }) => {
                   sx={{
                     border: '2px solid #FFFFFF',
                     borderRadius: '10px',
+                    '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button':
+                      {
+                        '-webkit-appearance': 'none',
+                        margin: 0,
+                      },
+                    '& input[type=number]': {
+                      '-moz-appearance': 'textfield',
+                    },
                   }}
                   InputProps={{
                     inputMode: 'none',
-
                     style: { color: '#FFFFFF' },
                   }}
                 />
@@ -191,9 +200,10 @@ const DepositModal: React.FC<DepositModal> = ({ setModal }) => {
                 <Box
                   sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}
                 >
-                  <span
+                  <Typography
+                    component='span'
                     style={{
-                      background: '#F3BA2F',
+                      background: backgrounds[counter.counter.active_modal],
                       color: '#212121',
                       fontSize: '13px',
                       lineHeight: '20px',
@@ -203,7 +213,7 @@ const DepositModal: React.FC<DepositModal> = ({ setModal }) => {
                     }}
                   >
                     {counter.counter.active_modal}st
-                  </span>
+                  </Typography>
                   <Typography
                     variant='body1'
                     sx={{
@@ -215,7 +225,16 @@ const DepositModal: React.FC<DepositModal> = ({ setModal }) => {
                   >
                     Deposit
                   </Typography>
-                  <Box sx={{ marginTop: '4px' }}>
+                  <Box
+                    sx={{
+                      marginTop: '4px',
+                      '&:hover:after': {
+                        content: '"Have a nice day!"',
+                        color: '#FFFFFF',
+                        paddingLeft: '5px',
+                      },
+                    }}
+                  >
                     <InformationIcon />
                   </Box>
                 </Box>
@@ -283,9 +302,16 @@ const DepositModal: React.FC<DepositModal> = ({ setModal }) => {
             sx={{ textAlign: 'center', color: '#FFFFFF' }}
           >
             Have a promo code?
-            <span style={{ color: '#F3302A', cursor: 'pointer' }}>
+            <Typography
+              component='span'
+              style={{
+                color: '#F3302A',
+                cursor: 'pointer',
+                marginLeft: '10px',
+              }}
+            >
               Click here
-            </span>
+            </Typography>
           </Typography>
         </Box>
       </Box>

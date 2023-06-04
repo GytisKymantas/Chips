@@ -3,16 +3,18 @@ import React, { useState } from 'react';
 import ClaimModal from '../ClaimModal';
 import DepositModal from '../DepositModal';
 import Image from 'next/image';
+import Initial from '../../public/Initial';
+import { ModalTypes } from '../../utils/ModalData';
 
 const ModalContainer = () => {
   const [modal, setModal] = useState('');
 
   const renderModal = () => {
-    if (modal === 'Deposit Modal') {
+    if (modal === ModalTypes.DepositModal) {
       return <DepositModal setModal={setModal} />;
     }
 
-    if (modal === 'Claim Modal') {
+    if (modal === ModalTypes.ClaimModal) {
       return <ClaimModal setModal={setModal} />;
     }
 
@@ -27,23 +29,9 @@ const ModalContainer = () => {
           top: '50%',
           left: '50%',
         }}
-        onClick={() => setModal('Claim Modal')}
+        onClick={() => setModal(ModalTypes.ClaimModal)}
       >
-        {/* <Image
-          src='/public/initial.png'
-          alt='click me'
-          width={200}
-          height={100}
-        />{' '}
-        <img src='/public/bam.jpg' alt='img' />{' '} */}
-        <Card>
-          <CardMedia
-            component='img'
-            alt='Example Image'
-            image='/public/initial.png' // Replace with the actual path to your image
-            title='Example Image'
-          />
-        </Card>
+        <Initial />
       </Box>
     );
   };

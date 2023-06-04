@@ -11,3 +11,9 @@ export const backgrounds = [
   export const fromNumbers = [30, 100, 900];
   export const USDfloat = 1.0757;
   export const EUROfloat = 0.92963;
+
+  export enum ModalTypes {
+    ClaimModal = 'Claim Modal',
+    DepositModal = 'Deposit Modal',
+    Initial = 'Initial',
+  }
