@@ -1,3 +1,12 @@
+There were a few figma component issues where they contained  faulty width and heights, as well as some components could not be selected on figma for their design details. 
+
+some images would not load in .jpg and .png format. Work around solution to converting as .svg's.
+
+also some typo errors on figma design, i.e "Claimed"
+
+type 'npm run dev' to start
+
+
 # TypeScript Next.js example
 
 This is a really simple project that shows the usage of Next.js with TypeScript.
