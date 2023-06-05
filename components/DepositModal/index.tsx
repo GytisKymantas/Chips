@@ -22,6 +22,13 @@ import {
 } from '../../utils/ModalData';
 import BonusBox from './BonusBox';
 import CounterType from '../../types';
+import InformationBlock from './InformationBlock';
+import {
+  BONUS_RANGE_1,
+  BONUS_RANGE_2,
+  BONUS_RANGE_3,
+  BONUS_RANGE_4,
+} from '../../utils/Constants';
 
 interface DepositModal {
   setModal: Dispatch<SetStateAction<string>>;
@@ -30,34 +37,95 @@ interface DepositModal {
 const DepositModal: React.FC<DepositModal> = ({ setModal }) => {
   const dispatch = useDispatch();
 
-  const [currency, setCurrency] = useState('EUR');
+  const [currency, setCurrency] = useState('USD');
   const [checked, setChecked] = useState(false);
   const [selectedBox, setSelectedBox] = useState(0);
   const [value, setValue] = useState<string>('');
+  const [isHovered, setIsHovered] = useState(false);
   const counter = useSelector((state) => state) as CounterType;
+
   const handleToggle = () => {
     setChecked(!checked);
   };
 
-  const handleSubmit = (event) => {
+  const handleMultiplier = (depositNumber: number) => {
+    if (depositNumber === 1) {
+      return 2;
+    }
+    if (depositNumber === 2) {
+      return 2.1;
+    }
+    if (depositNumber === 3) {
+      return 2.2;
+    }
+    if (depositNumber === 4) {
+      return 2.7;
+    }
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const depositNumber = counter.counter.active_modal;
-    const amount = parseFloat(value);
+    const depositNumber = await counter.counter.active_modal;
+    const amount =
+      currency === 'USD'
+        ? parseFloat(value)
+        : Math.round(parseFloat(value) * USDfloat);
 
     let multipliedAmount = 0;
 
-    if (selectedBox === 0 && amount >= 30 && amount <= 99) {
+    let rangeArray;
+
+    switch (depositNumber) {
+      case 1:
+        rangeArray = BONUS_RANGE_1;
+        break;
+      case 2:
+        rangeArray = BONUS_RANGE_2;
+        break;
+      case 3:
+        rangeArray = BONUS_RANGE_3;
+        break;
+      case 4:
+        rangeArray = BONUS_RANGE_4;
+        break;
+      default:
+        rangeArray = BONUS_RANGE_1;
+    }
+
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1000); // Use setTimeout to wait for the next event loop tick
+    });
+
+    if (
+      selectedBox === 1 &&
+      amount >= rangeArray[selectedBox - 1]?.from_1 &&
+      amount <= rangeArray[selectedBox - 1]?.to_1
+    ) {
       multipliedAmount = amount * 1;
-    } else if (selectedBox === 1 && amount >= 100 && amount <= 399) {
+    } else if (
+      selectedBox === 2 &&
+      amount >= rangeArray[selectedBox - 1]?.from_2 &&
+      amount <= rangeArray[selectedBox - 1]?.to_2
+    ) {
       multipliedAmount = amount * 1.5;
-    } else if (selectedBox === 2 && amount >= 400 && amount <= 900) {
-      multipliedAmount = amount * 2;
+    } else if (
+      selectedBox === 3 &&
+      amount >= rangeArray[selectedBox - 1]?.from_3 &&
+      amount <= rangeArray[selectedBox - 1]?.to_3
+    ) {
+      multipliedAmount = amount * handleMultiplier(depositNumber);
+    } else if (
+      selectedBox === 3 &&
+      amount > rangeArray[0].to_1 &&
+      amount < rangeArray[2].from_3
+    ) {
+      multipliedAmount = amount * 1.5;
     } else {
       multipliedAmount = amount;
     }
 
-    dispatch(addDeposit({ depositNumber, amount: multipliedAmount }));
+    dispatch(addDeposit({ depositNumber, amount: multipliedAmount.toFixed() }));
     setModal(ModalTypes.ClaimModal);
   };
 
@@ -66,11 +134,11 @@ const DepositModal: React.FC<DepositModal> = ({ setModal }) => {
 
     if (currency === 'EUR' && selectedCurrency === 'USD') {
       setCurrency(selectedCurrency);
-      const convertedValue = (Number(value) * USDfloat).toFixed(2);
+      const convertedValue = Math.round(Number(value) * USDfloat).toFixed(0);
       setValue(String(convertedValue));
     } else if (currency === 'USD' && selectedCurrency === 'EUR') {
       setCurrency(selectedCurrency);
-      const convertedValue = (Number(value) * EUROfloat).toFixed(2);
+      const convertedValue = Math.round(Number(value) * EUROfloat).toFixed(0);
       setValue(String(convertedValue));
     } else {
       setCurrency(selectedCurrency);
@@ -124,7 +192,7 @@ const DepositModal: React.FC<DepositModal> = ({ setModal }) => {
           <Typography
             variant='body1'
             sx={{
-              fontWeight: 700,
+              fontWeight: '400',
               fontSize: '16px',
               lineHeight: '24px',
               color: '#8E8E8E',
@@ -166,6 +234,12 @@ const DepositModal: React.FC<DepositModal> = ({ setModal }) => {
                     '& input[type=number]': {
                       '-moz-appearance': 'textfield',
                     },
+                    '& input': {
+                      fontWeight: 700,
+                      fontSize: '32px',
+                      lineHeight: '48px',
+                      padding: '5px 0 5px 20px',
+                    },
                   }}
                   InputProps={{
                     inputMode: 'none',
@@ -184,6 +258,9 @@ const DepositModal: React.FC<DepositModal> = ({ setModal }) => {
                     position: 'absolute',
                     top: '10px',
                     left: '70%',
+                    '& .MuiSelect-icon': {
+                      color: '#FFFFFF',
+                    },
                   }}
                 >
                   <MenuItem value='EUR'>EUR</MenuItem>
@@ -228,14 +305,20 @@ const DepositModal: React.FC<DepositModal> = ({ setModal }) => {
                   <Box
                     sx={{
                       marginTop: '4px',
-                      '&:hover:after': {
-                        content: '"Have a nice day!"',
-                        color: '#FFFFFF',
-                        paddingLeft: '5px',
-                      },
                     }}
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
                   >
                     <InformationIcon />
+                    {isHovered && (
+                      <Box
+                        sx={{ position: 'absolute', left: '50px', zIndex: '4' }}
+                      >
+                        <InformationBlock
+                          depositNumber={counter.counter.active_modal}
+                        />
+                      </Box>
+                    )}
                   </Box>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -254,6 +337,14 @@ const DepositModal: React.FC<DepositModal> = ({ setModal }) => {
                     onChange={handleToggle}
                     color='primary'
                     inputProps={{ 'aria-label': 'toggle' }}
+                    sx={{
+                      '& .MuiSwitch-thumb': {
+                        backgroundColor: '#FFFFF0',
+                      },
+                      '& .Mui-checked + .MuiSwitch-track': {
+                        backgroundColor: '#39D493',
+                      },
+                    }}
                   />
                 </Box>
               </Box>
@@ -265,14 +356,12 @@ const DepositModal: React.FC<DepositModal> = ({ setModal }) => {
                   marginBottom: '10px',
                 }}
               >
-                {values.map((value, index) => (
-                  <Box key={index} onClick={() => setSelectedBox(index)}>
+                {values.map((_, index) => (
+                  <Box key={index} onClick={() => setSelectedBox(index + 1)}>
                     <BonusBox
-                      fromNumber={fromNumbers[index]}
-                      percentage={value}
                       disabled={checked}
-                      index={index}
-                      valueIndex={selectedBox}
+                      index={index + 1}
+                      selectedBox={selectedBox}
                     />
                   </Box>
                 ))}

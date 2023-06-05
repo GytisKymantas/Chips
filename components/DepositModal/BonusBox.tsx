@@ -1,22 +1,70 @@
 import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import GiftBox from '../../public/giftBox';
+import { CounterType } from '../../types/types';
+import {
+  BONUS_ONE,
+  PERCENTAGE_ONE,
+  BONUS_TWO,
+  PERCENTAGE_TWO,
+  BONUS_THREE,
+  PERCENTAGE_THREE,
+  BONUS_FOUR,
+  PERCENTAGE_FOUR,
+} from '../../utils/Constants';
 
 interface BonusBoxProps {
-  fromNumber: number;
-  percentage: number;
   disabled?: boolean;
   index: number;
-  valueIndex: number;
+  selectedBox: number;
 }
 const BonusBox: React.FC<BonusBoxProps> = ({
-  fromNumber,
-  percentage,
   disabled,
   index,
-  valueIndex,
+  selectedBox,
 }) => {
+  const counter = useSelector((state) => state) as CounterType;
+  const depositNumber = counter.counter.active_modal;
+
+  const handleFrom = () => {
+    if (index === 1) {
+      return 'from';
+    }
+    if (index === 2) {
+      return 'from';
+    }
+    if (index === 3) {
+      return 'min.';
+    }
+  };
+
+  let BonusArray;
+  let PercentageArray;
+
+  switch (depositNumber) {
+    case 1:
+      BonusArray = BONUS_ONE;
+      PercentageArray = PERCENTAGE_ONE;
+      break;
+    case 2:
+      BonusArray = BONUS_TWO;
+      PercentageArray = PERCENTAGE_TWO;
+      break;
+    case 3:
+      BonusArray = BONUS_THREE;
+      PercentageArray = PERCENTAGE_THREE;
+      break;
+    case 4:
+      BonusArray = BONUS_FOUR;
+      PercentageArray = PERCENTAGE_FOUR;
+      break;
+    default:
+      BonusArray = BONUS_ONE;
+      PercentageArray = PERCENTAGE_ONE;
+  }
+
   return (
     <Box
       sx={{
@@ -24,11 +72,11 @@ const BonusBox: React.FC<BonusBoxProps> = ({
         padding: '12px 14px',
         opacity: disabled ? '1' : '0.5',
         border:
-          valueIndex === index && disabled
+          selectedBox === index && disabled
             ? '2px solid #F3BA2F'
             : '2px solid transparent',
         boxShadow:
-          valueIndex === index && disabled
+          selectedBox === index && disabled
             ? '0px 0px 5px -1px #F3BA2F'
             : 'none',
         borderRadius: '10px',
@@ -40,7 +88,7 @@ const BonusBox: React.FC<BonusBoxProps> = ({
       <Box sx={{ opacity: disabled ? '1' : '0.7' }}>
         <GiftBox />{' '}
       </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'column', width: '50px' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', width: '60px' }}>
         <Typography
           component='span'
           style={{
@@ -50,7 +98,7 @@ const BonusBox: React.FC<BonusBoxProps> = ({
             lineHeight: '16px',
           }}
         >
-          from ${fromNumber}
+          {handleFrom()} ${BonusArray[index - 1]}
         </Typography>
         <Typography
           component='span'
@@ -61,7 +109,7 @@ const BonusBox: React.FC<BonusBoxProps> = ({
             fontWeight: '700',
           }}
         >
-          {percentage}%{' '}
+          {PercentageArray[index - 1]}%{' '}
           <Typography
             component='span'
             style={{

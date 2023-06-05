@@ -9,3 +9,18 @@ export const handleDepositNumber = (index: number) => {
       return `${index}th deposit`;
     }
   };
+
+  export const handlePercentage = (depositNumber: number) => {
+    if (depositNumber === 1) {
+      return '200';
+    }
+    if (depositNumber === 2) {
+      return '210';
+    }
+    if (depositNumber === 3) {
+      return '220';
+    }
+    if (depositNumber === 4) {
+      return '270';
+    }
+  };

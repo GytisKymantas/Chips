@@ -8,7 +8,6 @@ export const backgrounds = [
   ];
 
   export const values = [100, 150, 200];
-  export const fromNumbers = [30, 100, 900];
   export const USDfloat = 1.0757;
   export const EUROfloat = 0.92963;
 

@@ -6,7 +6,7 @@ import BlueBox from '../../../public/blueBox';
 import Confetti from '../../../public/confetti';
 import GreenBox from '../../../public/greenBox';
 import PurpleBox from '../../../public/purpleBox';
-import { addDepositModal } from '../../../store/reducers/counter';
+import { addClaimed, addDepositModal } from '../../../store/reducers/counter';
 import { CounterType } from '../../../types/types';
 import { handleDepositNumber } from '../../../utils/functions';
 
@@ -24,9 +24,9 @@ const Card: React.FC<CardProps> = ({
   limitAmount,
 }) => {
   const counter = useSelector((state) => state) as CounterType;
-  const [claimed, setClaimed] = useState(false);
   const dispatch = useDispatch();
   const bonusAmount = counter.counter[`deposit_${index}`];
+  const claimedCards = counter.counter.claimed;
   const maximumValue = limitAmount;
   const value = (bonusAmount / maximumValue) * 100;
   const bonusPercentage = value.toFixed(2);
@@ -34,6 +34,10 @@ const Card: React.FC<CardProps> = ({
   const handleModalSelection = (value: string, index: number) => {
     dispatch(addDepositModal(index));
     setModal(value);
+  };
+
+  const handleClaimedCards = (index) => {
+    dispatch(addClaimed(index));
   };
 
   const handleDisableButton = () => {
@@ -51,7 +55,7 @@ const Card: React.FC<CardProps> = ({
     return false;
   };
 
-  if (claimed) {
+  if (claimedCards.includes(index)) {
     return (
       <Box
         sx={{
@@ -164,7 +168,7 @@ const Card: React.FC<CardProps> = ({
     <Box
       sx={{
         background: background,
-        width: '503px',
+        maxWidth: '503px',
         padding: '18px 25px',
         color: '#FFFFFF',
         borderRadius: '20px',
@@ -189,7 +193,7 @@ const Card: React.FC<CardProps> = ({
           justifyContent: 'space-between',
         }}
       >
-        <Box sx={{ width: '238px' }}>
+        <Box sx={{ width: '257px' }}>
           <Typography
             variant='body1'
             sx={{
@@ -243,7 +247,7 @@ const Card: React.FC<CardProps> = ({
           disabled={handleDisableButton()}
           onClick={() =>
             bonusAmount > 0
-              ? setClaimed(true)
+              ? handleClaimedCards(index)
               : handleModalSelection('Deposit Modal', index)
           }
         >

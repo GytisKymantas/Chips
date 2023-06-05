@@ -1,8 +1,7 @@
-import { Box, Card, CardMedia } from '@mui/material';
+import { Box } from '@mui/material';
 import React, { useState } from 'react';
 import ClaimModal from '../ClaimModal';
 import DepositModal from '../DepositModal';
-import Image from 'next/image';
 import Initial from '../../public/Initial';
 import { ModalTypes } from '../../utils/ModalData';
 
@@ -21,13 +20,13 @@ const ModalContainer = () => {
     return (
       <Box
         sx={{
-          background: 'gray',
           width: '200px',
           height: '100px',
           cursor: 'pointer',
           position: 'absolute',
           top: '50%',
           left: '50%',
+          transform: 'translate(-50%, -50%)',
         }}
         onClick={() => setModal(ModalTypes.ClaimModal)}
       >

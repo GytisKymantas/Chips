@@ -34,7 +34,7 @@ const ClaimModal: React.FC<ClaimModal> = ({ setModal }) => {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '13px' }}>
             <Box
               onClick={() => setDetailsModal(false)}
-              sx={{ cursor: 'pointer' }}
+              sx={{ cursor: 'pointer', marginTop: '5px' }}
             >
               <ArrowLeft />
             </Box>
