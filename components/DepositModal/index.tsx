@@ -97,29 +97,33 @@ const DepositModal: React.FC<DepositModal> = ({ setModal }) => {
     });
 
     if (
-      selectedBox === 1 &&
+      selectedBox &&
       amount >= rangeArray[selectedBox - 1]?.from_1 &&
       amount <= rangeArray[selectedBox - 1]?.to_1
     ) {
       multipliedAmount = amount * 1;
     } else if (
-      selectedBox === 2 &&
+      selectedBox &&
       amount >= rangeArray[selectedBox - 1]?.from_2 &&
       amount <= rangeArray[selectedBox - 1]?.to_2
     ) {
       multipliedAmount = amount * 1.5;
     } else if (
-      selectedBox === 3 &&
+      selectedBox &&
       amount >= rangeArray[selectedBox - 1]?.from_3 &&
       amount <= rangeArray[selectedBox - 1]?.to_3
     ) {
       multipliedAmount = amount * handleMultiplier(depositNumber);
     } else if (
-      selectedBox === 3 &&
+      selectedBox &&
       amount > rangeArray[0].to_1 &&
       amount < rangeArray[2].from_3
     ) {
       multipliedAmount = amount * 1.5;
+    } else if (selectedBox && amount > rangeArray[selectedBox - 1].to_2) {
+      multipliedAmount = amount * handleMultiplier(depositNumber);
+    } else if (selectedBox && amount > rangeArray[selectedBox - 1].to_1) {
+      multipliedAmount = amount * handleMultiplier(depositNumber);
     } else {
       multipliedAmount = amount;
     }
