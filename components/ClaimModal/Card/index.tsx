@@ -1,14 +1,13 @@
 import { Box, Button, Typography } from '@mui/material';
-import Image from 'next/image';
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import BlueBox from '../../../public/blueBox';
 import Confetti from '../../../public/confetti';
 import GreenBox from '../../../public/greenBox';
 import PurpleBox from '../../../public/purpleBox';
 import { addClaimed, addDepositModal } from '../../../store/reducers/counter';
-import { CounterType } from '../../../types/types';
-import { handleDepositNumber } from '../../../utils/functions';
+import { CounterType } from '../../../types/interfaces';
+import { handleDepositNumber } from '../../../utils/Handlers';
 
 interface CardProps {
   index: number;

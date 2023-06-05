@@ -3,7 +3,7 @@ import { Box } from '@mui/system';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import GiftBox from '../../public/giftBox';
-import { CounterType } from '../../types/types';
+import { CounterType } from '../../types/interfaces';
 import {
   BONUS_ONE,
   PERCENTAGE_ONE,

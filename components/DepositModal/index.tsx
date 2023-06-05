@@ -16,12 +16,11 @@ import {
   USDfloat,
   EUROfloat,
   values,
-  fromNumbers,
   backgrounds,
   ModalTypes,
 } from '../../utils/ModalData';
 import BonusBox from './BonusBox';
-import CounterType from '../../types';
+import { CounterType } from '../../types/interfaces';
 import InformationBlock from './InformationBlock';
 import {
   BONUS_RANGE_1,

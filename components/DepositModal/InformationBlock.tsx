@@ -6,7 +6,7 @@ import {
   CARD_THREE,
   CARD_FOUR,
 } from '../../utils/Constants';
-import { handlePercentage } from '../../utils/Functions';
+import { handlePercentage } from '../../utils/Handlers';
 
 interface InformationBlockProps {
   depositNumber: number;
